@@ -13,16 +13,27 @@ extern "C"
             hr = pDDraw->TestCooperativeLevel();
             if (hr == DDERR_EXCLUSIVEMODEALREADYSET)
             {
+                pDDraw->Release();
                 return true;
             }
         }
 
+        pDDraw->Release();
         return false;
     }
 }
 
+/*
+** Write all tests here. Preferably with the name of the function, a brief explanation, and print its return values.
+*/
 int main()
 {
-    std::cout << "Is any game running: " << isAnyApplicationFullscreen();
+    /*
+    ** Function: isAnyApplicationFullscreen
+    ** Explanation: Checks if any application (or game) is in fullscreen mode.
+    ** Return value: true if any application is in fullscreen mode, false otherwise.
+    */
+    std::cout << "isAnyApplicationFullscreen: " << isAnyApplicationFullscreen();
+
     return 0;
 }
