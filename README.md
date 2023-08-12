@@ -36,7 +36,4 @@ make dll
 ## Conventions
 
 - Use `camelCase` for variables and functions
-- Use only `C` syntax for exportable functions
 - Write at least one test for each function
-
-<i>For writing tests, `C++` syntax may be used.</i>

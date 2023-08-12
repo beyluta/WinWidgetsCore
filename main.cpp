@@ -21,6 +21,15 @@ extern "C"
         pDDraw->Release();
         return false;
     }
+
+    export size_t *getVRAMInformation()
+    {
+        size_t total;
+        size_t free;
+
+        cudaMemGetInfo(&free, &total);
+        return new size_t[2]{total, free};
+    }
 }
 
 /*
@@ -34,6 +43,15 @@ int main()
     ** Return value: true if any application is in fullscreen mode, false otherwise.
     */
     std::cout << "isAnyApplicationFullscreen: " << isAnyApplicationFullscreen();
+
+    /*
+    ** Function: getVRAMInformation
+    ** Explanation: Returns the total and free VRAM in bytes.
+    ** Return value: An array of size_t with the total and free VRAM in bytes.
+    */
+    size_t *vramInfo = getVRAMInformation();
+    std::cout << "getVRAMInformation: " << vramInfo[0] << " " << vramInfo[1] << std::endl;
+    delete[] vramInfo;
 
     return 0;
 }
