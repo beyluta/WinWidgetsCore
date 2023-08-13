@@ -24,11 +24,34 @@ extern "C"
 
     export size_t *getVRAMInformation()
     {
-        size_t total;
-        size_t free;
+        size_t total = 0;
+        size_t free = 0;
+        int count;
 
-        cudaMemGetInfo(&free, &total);
+        cudaError_t error = cudaGetDeviceCount(&count);
+
+        if (error == cudaSuccess)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                if (cudaSetDevice(i) == cudaSuccess)
+                {
+                    error = cudaMemGetInfo(&free, &total);
+
+                    if (error != cudaSuccess)
+                    {
+                        return new size_t[2]{total, free};
+                    }
+                }
+            }
+        }
+
         return new size_t[2]{total, free};
+    }
+
+    export void freeVRAMInformation(size_t *vramInfo)
+    {
+        delete[] vramInfo;
     }
 }
 
@@ -42,7 +65,7 @@ int main()
     ** Explanation: Checks if any application (or game) is in fullscreen mode.
     ** Return value: true if any application is in fullscreen mode, false otherwise.
     */
-    std::cout << "isAnyApplicationFullscreen: " << isAnyApplicationFullscreen();
+    std::cout << "isAnyApplicationFullscreen: " << isAnyApplicationFullscreen() << std::endl;
 
     /*
     ** Function: getVRAMInformation
@@ -50,7 +73,7 @@ int main()
     ** Return value: An array of size_t with the total and free VRAM in bytes.
     */
     size_t *vramInfo = getVRAMInformation();
-    std::cout << "getVRAMInformation: " << vramInfo[0] << " " << vramInfo[1] << std::endl;
+    std::cout << "total: " << vramInfo[0] << " free: " << vramInfo[1] << std::endl;
     delete[] vramInfo;
 
     return 0;
